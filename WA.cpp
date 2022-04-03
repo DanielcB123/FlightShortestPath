@@ -1,6 +1,11 @@
+/***********************************************************
+  Synopsis: read from city.name and flight.txt
+            store the graph in a adjacency matrix
+***********************************************************/
+
 #include <iostream>
 #include <vector>
-#include <ctime>
+#include <ctime> 
 #include <cstdlib>
 #include <string>
 #include <fstream>
@@ -15,7 +20,7 @@ class Graph{
 
           void print();
           void addEdge(int node1, int node2){ adj[node1][node2] = 1; };
-     private:
+     private: 
           int n;
           int adj[140][140]; // You may want to use adjacent list implementation for sparse graph instead
 };
@@ -63,7 +68,7 @@ int main(int argc, char *argv[]){
    cin >> n;
 
    Graph graph(n);
-
+ 
    char lineChar[256];
 
    ifstream cityFile;
