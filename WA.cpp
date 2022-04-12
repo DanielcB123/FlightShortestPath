@@ -11,6 +11,8 @@
 #include <fstream>
 #include <map>
 #include <list>
+#include <climits>
+//#define INT_MAX 1000;
 
 using namespace std;
 
@@ -164,6 +166,52 @@ bool BFS(vector<int> adj[], int src, int dest, int v,
  
 // utility function to print the shortest distance
 // between source vertex and destination vertex
+void printShortestDistanceInRange(vector<int> adj[], int s,
+                           int dest, int v, int conn)
+{
+    std::map<string,int,strCmp>::iterator it;
+    // predecessor[i] array stores predecessor of
+    // i and distance array stores distance of i
+    // from s
+    int pred[v], dist[v];
+ 
+    if (BFS(adj, s, dest, v, pred, dist) == false) {
+        cout << "Given source and destination"
+             << " are not connected";
+        return;
+    }
+ 
+    // vector path stores the shortest path
+    vector<int> path;
+    int crawl = dest;
+    path.push_back(crawl);
+    while (pred[crawl] != -1) {
+        path.push_back(pred[crawl]);
+        crawl = pred[crawl];
+    }
+ 
+    // distance from source is in distance array
+    cout << "Shortest trip has "
+         << dist[dest] << " flights";
+
+    if(conn >= dist[dest]){
+        cout <<"\nThis is within the amount requested\n";
+    }else{
+        cout <<"\nThis is more flights the amount requested\n";
+    }
+ 
+    // printing path from source to destination
+    cout << "\nPath is::\n";
+    for (int i = path.size() - 1; i >= 0; i--){
+        // cout << path[i] << " ";
+        for (auto it = city.begin(); it != city.end(); ++it)
+            if (it->second == path[i])
+                cout << it->first << "---->";
+    }
+}
+
+
+
 void printShortestDistance(vector<int> adj[], int s,
                            int dest, int v)
 {
@@ -207,6 +255,25 @@ void printShortestDistance(vector<int> adj[], int s,
 
 
 
+void ShortestViaIntermediateCities(vector<int> adj[], int start, int interm_A, int interm_B, int end, int v){
+    int flagA, flagB;
+    int pred[v], dist[v];
+    if(BFS(adj, start, interm_A, v, pred, dist) && BFS(adj, start, interm_B, v, pred, dist) == false) {
+        cout <<"\nNo route to the destination city via the intermediate cities.\n";
+    }
+    if(BFS(adj, start, interm_A, v, pred, dist) && BFS(adj, interm_A, interm_B, v, pred, dist) && BFS(adj, interm_B, end, v, pred, dist)){
+
+    }
+    if(BFS(adj, start, interm_B, v, pred, dist) && BFS(adj, interm_B, interm_A, v, pred, dist) && BFS(adj, interm_A, end, v, pred, dist)){
+                //figure out the logic 
+                // from A
+                //          ->B->C->D
+                //  or
+                //          ->C->B->D
+    }
+}
+
+
 
 
 
@@ -231,9 +298,10 @@ int main(int argc, char *argv[]){
    string line;
    
 
-   cout << "Please enter the number of cities in your graph: " << endl;
-   cout << "---------------------------------------------------" << endl;
-   cin >> n; 
+//    cout << "Please enter the number of cities in your graph: " << endl;
+//    cout << "---------------------------------------------------" << endl;
+//    cin >> n; 
+   n = 140;
    vector<int> adj2[n];
 
    Graph graph(n);
@@ -248,14 +316,19 @@ int main(int argc, char *argv[]){
       line = lineChar;
       city[line] = i;
       cout << line << " is numbered as city " << city[line]<< endl;
+
+
+
     // auto it = city.find("Seattle, United States");
     //   cout << it->second << " is city as " <<it->first<< endl;
     //   cout <<"Seattle, United States"<<endl;
     //   cout << line<<endl;
+
+
    }
 
 
-    cout <<"TESTINGTESTINGTESTING++++++  "<< city["Seattle, United States"] <<endl;
+    // cout <<"TESTINGTESTINGTESTING++++++  "<< city["Seattle, United States"] <<endl;
 //     map<string, int>::iterator itr;
 //     for (itr = city.begin(); itr != city.end(); ++itr) {
 //         cout << '\t' << itr->first << '\t' << itr->second
@@ -294,39 +367,80 @@ cout <<"================================================="<<endl;
    cout << "-----------------------------------------------------------------------------------" << endl;
 //    graph.print();
     // printElements(adj2,n);
-    int choice1 = 0, choice2 = 0;
-    string startCountry, startCity, endCountry, endCity, start, end, dummy;
+    int choice1 = 0, choice2 = 0, conn;
+    // string startCountry, startCity, endCountry, endCity, start, end, dummy;
     while(true){
-    cout <<"+-------------------------------------------+\n";
-    cout <<"+              World Airlines               +\n";  
-    cout <<"+                                           +\n"; 
-    cout <<"+  1. Find Flight with least connections    +\n"; 
-    cout <<"+  2. Quit                                  +\n";     
-    cout <<"+                                           +\n";             
-    cout <<"+-------------------------------------------+\n";
-    cin >> choice1;
-    if(choice1 == 2){break;}
-    if(choice1 == 1){
-        cout <<"+-------------------------------------------+\n";
-        cout <<"+              Shortest Flight              +\n";            
-        cout <<"+-------------------------------------------+\n";
-        cout <<"Enter the starting country: "; 
-        getline(cin, dummy);
-        getline(cin, startCountry);
-        cout <<"Enter the starting city: "; 
-        getline(cin, startCity);
-        cout <<"Enter the destination country: "; 
-        getline(cin, endCountry);
-        cout <<"Enter the destination city: "; 
-        getline(cin, endCity);
-    }
-    start = startCity + ", " + startCountry;
-    end = endCity + ", " + endCountry;
+        cout <<"+-------------------------------------------------------------------+\n";
+        cout <<"+              World Airlines                                       +\n";  
+        cout <<"+                                                                   +\n"; 
+        cout <<"+  1. Find Flight with x connections                                +\n"; 
+        cout <<"+  2. Find Flight from city_A to city_D via city_B and city_C       +\n"; 
+        cout <<"+  3. Quit                                                          +\n";     
+        cout <<"+                                                                   +\n";             
+        cout <<"+-------------------------------------------------------------------+\n";
+        cin >> choice1;
+        if(choice1 == 3){break;}
+        if(choice1 == 1){
+            cout <<"+-------------------------------------------+\n";
+            cout <<"+              Shortest Flight              +\n";            
+            cout <<"+-------------------------------------------+\n";
+            string startCountry, startCity, endCountry, endCity, start, end, dummy;
+            cout <<"Enter the starting country: "; 
+            getline(cin, dummy);
+            getline(cin, startCountry);
+            cout <<"Enter the starting city: "; 
+            getline(cin, startCity);
+            cout <<"Enter the destination country: "; 
+            getline(cin, endCountry);
+            cout <<"Enter the destination city: "; 
+            getline(cin, endCity);
+            cout <<"Enter the number of connections: ";
+            cin >> conn;
+
+            start = startCity + ", " + startCountry;
+            end = endCity + ", " + endCountry;
 
 
-    int source = city[start], dest = city[end];
-    cout <<"\n";
-    printShortestDistance(adj2, source, dest, n);
-    cout <<"\n";
+            int source = city[start], dest = city[end];
+            cout <<"\n";
+            printShortestDistanceInRange(adj2, source, dest, n,conn);
+            cout <<"\n";
+        }
+        if(choice1==2){
+            // here do the same for choice 1 but use conditional logic to route via the given intermediate cities
+            string startCountry, startCity, endCountry, endCity, start, end, intermediateCity_A, intermediateCountry_A, intermediateCountry_B, intermediateCity_B, interm_A, interm_B, dummy;
+            int convertedToIntStart, convertedToInt_IntermA, convertedToInt_IntermB, convertedToIntEnd;
+            cout <<"Enter the starting country: "; 
+            getline(cin, dummy);
+            getline(cin, startCountry);
+            cout <<"Enter the starting city: "; 
+            getline(cin, startCity);
+            cout <<"Enter the final destination country: "; 
+            getline(cin, endCountry);
+            cout <<"Enter the final destination city: "; 
+            getline(cin, endCity);
+
+            cout <<"Enter a country to fly through on the way to " +  endCity + ", " + endCountry + ": ";
+            getline(cin, intermediateCountry_A);
+            cout <<"Enter the city in " + intermediateCountry_A + " you will be traveling to on your way to " +  endCity + ", " + endCountry + ": ";
+            getline(cin, intermediateCity_A);
+
+            cout <<"Enter another country to fly through on the way to " +  endCity + ", " + endCountry + ": ";
+            getline(cin, intermediateCountry_B);
+            cout <<"Enter the city in " + intermediateCountry_B + " you will be traveling to on your way to " +  endCity + ", " + endCountry + ": ";
+            getline(cin, intermediateCity_B);    
+
+            start = startCity + ", " + startCountry;
+            end = endCity + ", " + endCountry;
+            interm_A = intermediateCity_A + ", " + intermediateCountry_A;
+            interm_B = intermediateCity_B + ", " + intermediateCountry_B;
+
+            int convertedToIntStart = city[start];
+            int convertedToIntEnd = city[end];
+            int convertedToInt_IntermA = city[interm_A];
+            int convertedToInt_IntermB = city[interm_B];
+
+            ShortestViaIntermediateCities(adj2, convertedToIntStart, convertedToInt_IntermA, convertedToInt_IntermB, convertedToIntEnd, n); 
+        }
     }
 } 

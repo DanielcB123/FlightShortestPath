@@ -81,13 +81,13 @@ int main(int argc, char *argv[]){
       graph.push_back(node); 
    }
 
-  //  for (i=0; i< num_nodes; i++){
-  //    if (!graph[i].neighbors.empty()) continue;
-  //    cout << "From:  " << city[graph[i].nodeID] << endl << "To  : ";
-  //    for (j =0; j < graph[i].neighbors.size(); j++){
-  //        if (j)
-  //            cout <<  "       " << city[graph[i].neighbors[j]] << endl; 
-  //          else cout <<  " " << city[graph[i].neighbors[j]] << endl;
-  //    }
-  //  }
+   for (i=0; i< num_nodes; i++){
+     if (!graph[i].neighbors.empty()) continue;
+     cout << "From:  " << city[graph[i].nodeID] << endl << "To  : ";
+     for (j =0; j < graph[i].neighbors.size(); j++){
+         if (j)
+             cout <<  "       " << city[graph[i].neighbors[j]] << endl; 
+           else cout <<  " " << city[graph[i].neighbors[j]] << endl;
+     }
+   }
 }
