@@ -113,8 +113,7 @@ void printElements(vector<int> adj2[], int n)
 
 
 
-bool BFS(vector<int> adj[], int src, int dest, int v,
-         int pred[], int dist[])
+bool BFS(vector<int> adj[], int src, int dest, int v, int pred[], int dist[])
 {
     // a queue to maintain queue of vertices whose
     // adjacency list is to be scanned as per normal
@@ -251,26 +250,416 @@ void printShortestDistance(vector<int> adj[], int s,
 }
 
 
-
+void clearVisitedAndDistance(bool visited[], int dist[], int pred[], int v){
+        for (int i = 0; i < v; i++) {
+        visited[i] = false;
+        dist[i] = INT_MAX;
+        pred[i] = -1;
+    }
+}
 
 
 
 void ShortestViaIntermediateCities(vector<int> adj[], int start, int interm_A, int interm_B, int end, int v){
-    int flagA, flagB;
+    int case1PathSize, case2PathSize;
     int pred[v], dist[v];
+
+    vector<int> path1Case1, path2Case1, path3Case1;
+    vector<int> path1Case2, path2Case2, path3Case2;
+
+
     if(BFS(adj, start, interm_A, v, pred, dist) && BFS(adj, start, interm_B, v, pred, dist) == false) {
         cout <<"\nNo route to the destination city via the intermediate cities.\n";
-    }
-    if(BFS(adj, start, interm_A, v, pred, dist) && BFS(adj, interm_A, interm_B, v, pred, dist) && BFS(adj, interm_B, end, v, pred, dist)){
 
     }
-    if(BFS(adj, start, interm_B, v, pred, dist) && BFS(adj, interm_B, interm_A, v, pred, dist) && BFS(adj, interm_A, end, v, pred, dist)){
-                //figure out the logic 
-                // from A
-                //          ->B->C->D
-                //  or
-                //          ->C->B->D
+
+    /*
+
+
+        CASE 1 <----------------------------------------------------------------------------
+
+
+    */
+
+    if(BFS(adj, start, interm_A, v, pred, dist) && BFS(adj, interm_A, interm_B, v, pred, dist) && BFS(adj, interm_B, end, v, pred, dist)){
+
+    list<int> queue;
+    bool visited[v];
+    bool flag1=false,flag2=false,flag3=false;
+ 
+    for (int i = 0; i < v; i++) {
+        visited[i] = false;
+        dist[i] = INT_MAX;
+        pred[i] = -1;
     }
+    clearVisitedAndDistance(visited, dist, pred, v);
+ 
+    visited[start] = true;
+    dist[start] = 0;
+    queue.push_back(start);
+ 
+    // standard BFS algorithm
+    while (!queue.empty() || !flag1) {
+        int u = queue.front();
+        queue.pop_front();
+        for (int i = 0; i < adj[u].size(); i++) {
+            if (visited[adj[u][i]] == false) {
+                visited[adj[u][i]] = true;
+                dist[adj[u][i]] = dist[u] + 1;
+                pred[adj[u][i]] = u;
+                queue.push_back(adj[u][i]);
+ 
+
+                if (adj[u][i] == interm_A){
+                    // return true;
+                    flag1=true;
+                    break;
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+   
+    int crawl = interm_A;
+    path1Case1.push_back(crawl);
+    while (pred[crawl] != -1) {
+        path1Case1.push_back(pred[crawl]);
+        crawl = pred[crawl];
+    }
+
+    clearVisitedAndDistance(visited, dist, pred, v);
+
+
+    // FIND SHORTEST PATH1 TO INTERMEDIATE DESTINATION A FROM B =======================================================================
+
+
+    queue.clear();
+
+
+    clearVisitedAndDistance(visited, dist, pred, v);
+
+    
+    visited[interm_A] = true;
+    dist[interm_A] = 0;
+    queue.push_back(interm_A);
+ 
+    // standard BFS algorithm
+    while (!queue.empty() || !flag2) {
+        int u = queue.front();
+        queue.pop_front();
+        for (int i = 0; i < adj[u].size(); i++) {
+            if (visited[adj[u][i]] == false) {
+                visited[adj[u][i]] = true;
+                dist[adj[u][i]] = dist[u] + 1;
+                pred[adj[u][i]] = u;
+                queue.push_back(adj[u][i]);
+ 
+
+                if (adj[u][i] == interm_B){
+                    flag2=true;
+                    break;
+                }
+            }
+        }
+    }
+
+
+
+
+
+    
+    crawl = interm_B;
+    path2Case1.push_back(crawl);
+    while (pred[crawl] != -1) {
+        path2Case1.push_back(pred[crawl]);
+        crawl = pred[crawl];
+    }
+
+    clearVisitedAndDistance(visited, dist, pred, v);
+
+
+    // // FIND SHORTEST PATH TO FINAL DESTINATION FROM A =======================================================================
+
+
+    queue.clear();
+
+ 
+    clearVisitedAndDistance(visited, dist, pred, v);
+ 
+    visited[interm_B] = true;
+    dist[interm_B] = 0;
+    queue.push_back(interm_B);
+ 
+    // standard BFS algorithm
+    while (!queue.empty() || !flag3) {
+        int u = queue.front();
+        queue.pop_front();
+        for (int i = 0; i < adj[u].size(); i++) {
+            if (visited[adj[u][i]] == false) {
+                visited[adj[u][i]] = true;
+                dist[adj[u][i]] = dist[u] + 1;
+                pred[adj[u][i]] = u;
+                queue.push_back(adj[u][i]);
+ 
+
+                if (adj[u][i] == end){
+                    flag3=true;
+                    break;
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+    crawl = end;
+    path3Case1.push_back(crawl);
+    while (pred[crawl] != -1) {
+        path3Case1.push_back(pred[crawl]);
+        crawl = pred[crawl];
+    }
+
+
+// ==============================================================================================================================================
+
+
+
+    int case1PathSize = (path1Case1.size()-1) + (path2Case1.size()-1) + (path3Case1.size()-1);
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+    /*
+
+
+        CASE 2 <----------------------------------------------------------------------------
+
+
+    */
+    if(BFS(adj, start, interm_B, v, pred, dist) && BFS(adj, interm_B, interm_A, v, pred, dist) && BFS(adj, interm_A, end, v, pred, dist)){
+    // FIND SHORTEST PATH TO INTERMEDIATE DESTINATION B FROM START=======================================================================
+
+    
+    list<int> queue;
+    bool visited[v];
+    bool flag1Case2=false,flag2Case2=false,flag3Case2=false;
+ 
+    for (int i = 0; i < v; i++) {
+        visited[i] = false;
+        dist[i] = INT_MAX;
+        pred[i] = -1;
+    }
+    clearVisitedAndDistance(visited, dist, pred, v);
+ 
+    visited[start] = true;
+    dist[start] = 0;
+    queue.push_back(start);
+ 
+    // standard BFS algorithm
+    while (!queue.empty() || !flag1Case2) {
+        int u = queue.front();
+        queue.pop_front();
+        for (int i = 0; i < adj[u].size(); i++) {
+            if (visited[adj[u][i]] == false) {
+                visited[adj[u][i]] = true;
+                dist[adj[u][i]] = dist[u] + 1;
+                pred[adj[u][i]] = u;
+                queue.push_back(adj[u][i]);
+ 
+
+                if (adj[u][i] == interm_B){
+                    // return true;
+                    flag1Case2=true;
+                    break;
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+   
+    int crawl = interm_B;
+    path1Case2.push_back(crawl);
+    while (pred[crawl] != -1) {
+        path1Case2.push_back(pred[crawl]);
+        crawl = pred[crawl];
+    }
+
+    clearVisitedAndDistance(visited, dist, pred, v);
+
+
+    // FIND SHORTEST PATH1Case2 TO INTERMEDIATE DESTINATION A FROM B =======================================================================
+
+
+    queue.clear();
+
+
+    clearVisitedAndDistance(visited, dist, pred, v);
+
+    
+    visited[interm_B] = true;
+    dist[interm_B] = 0;
+    queue.push_back(interm_B);
+ 
+    // standard BFS algorithm
+    while (!queue.empty() || !flag2Case2) {
+        int u = queue.front();
+        queue.pop_front();
+        for (int i = 0; i < adj[u].size(); i++) {
+            if (visited[adj[u][i]] == false) {
+                visited[adj[u][i]] = true;
+                dist[adj[u][i]] = dist[u] + 1;
+                pred[adj[u][i]] = u;
+                queue.push_back(adj[u][i]);
+ 
+
+                if (adj[u][i] == interm_A){
+                    flag2Case2=true;
+                    break;
+                }
+            }
+        }
+    }
+
+
+
+
+
+    
+    crawl = interm_A;
+    path2Case2.push_back(crawl);
+    while (pred[crawl] != -1) {
+        path2Case2.push_back(pred[crawl]);
+        crawl = pred[crawl];
+    }
+
+    clearVisitedAndDistance(visited, dist, pred, v);
+
+
+    // // FIND SHORTEST PATH TO FINAL DESTINATION FROM A =======================================================================
+
+
+    queue.clear();
+
+ 
+    clearVisitedAndDistance(visited, dist, pred, v);
+ 
+    visited[interm_A] = true;
+    dist[interm_A] = 0;
+    queue.push_back(interm_A);
+ 
+    // standard BFS algorithm
+    while (!queue.empty() || !flag3Case2) {
+        int u = queue.front();
+        queue.pop_front();
+        for (int i = 0; i < adj[u].size(); i++) {
+            if (visited[adj[u][i]] == false) {
+                visited[adj[u][i]] = true;
+                dist[adj[u][i]] = dist[u] + 1;
+                pred[adj[u][i]] = u;
+                queue.push_back(adj[u][i]);
+ 
+
+                if (adj[u][i] == end){
+                    flag3Case2=true;
+                    break;
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+    crawl = end;
+    path3Case2.push_back(crawl);
+    while (pred[crawl] != -1) {
+        path3Case2.push_back(pred[crawl]);
+        crawl = pred[crawl];
+    }
+
+
+// ==============================================================================================================================================
+
+
+    int case2PathSize = (path1Case2.size()-1) + (path2Case2.size()-1) + (path3Case2.size()-1);
+
+
+    }
+    if(case1PathSize<case2PathSize){
+        cout << "\nPath is::\n";
+        for (int i = path1Case1.size() - 1; i >= 0; i--){
+            // cout << path[i] << " ";
+            for (auto it = city.begin(); it != city.end(); ++it)
+                if (it->second == path1Case1[i])
+                    cout << it->first << "---->";
+        }
+
+        for (int i = path2Case1.size() - 2; i >= 0; i--){
+            // cout << path[i] << " ";
+            for (auto it = city.begin(); it != city.end(); ++it)
+                if (it->second == path2Case1[i])
+                    cout << it->first << "---->";
+        }
+
+        for (int i = path3Case1.size() - 2; i >= 0; i--){
+            // cout << path[i] << " ";
+            for (auto it = city.begin(); it != city.end(); ++it)
+                if (it->second == path3Case1[i])
+                    cout << it->first << "---->";
+        }
+
+        int case1PathSize = (path1Case1.size()-1) + (path2Case1.size()-1) + (path3Case1.size()-1);
+        cout <<"\nThe trip has "<< case1PathSize<< " flights.\n";
+    } else {
+        cout << "\nPath is::\n";
+        for (int i = path1Case2.size() - 1; i >= 0; i--){
+            // cout << path[i] << " ";
+            for (auto it = city.begin(); it != city.end(); ++it)
+                if (it->second == path1Case2[i])
+                    cout << it->first << "---->";
+        }
+
+        for (int i = path2Case2.size() - 2; i >= 0; i--){
+            // cout << path[i] << " ";
+            for (auto it = city.begin(); it != city.end(); ++it)
+                if (it->second == path2Case2[i])
+                    cout << it->first << "---->";
+        }
+
+        for (int i = path3Case2.size() - 2; i >= 0; i--){
+            // cout << path[i] << " ";
+            for (auto it = city.begin(); it != city.end(); ++it)
+                if (it->second == path3Case2[i])
+                    cout << it->first << "---->";
+        }
+    }
+
 }
 
 
@@ -410,35 +799,45 @@ cout <<"================================================="<<endl;
             // here do the same for choice 1 but use conditional logic to route via the given intermediate cities
             string startCountry, startCity, endCountry, endCity, start, end, intermediateCity_A, intermediateCountry_A, intermediateCountry_B, intermediateCity_B, interm_A, interm_B, dummy;
             int convertedToIntStart, convertedToInt_IntermA, convertedToInt_IntermB, convertedToIntEnd;
-            cout <<"Enter the starting country: "; 
-            getline(cin, dummy);
-            getline(cin, startCountry);
-            cout <<"Enter the starting city: "; 
-            getline(cin, startCity);
-            cout <<"Enter the final destination country: "; 
-            getline(cin, endCountry);
-            cout <<"Enter the final destination city: "; 
-            getline(cin, endCity);
+            // cout <<"Enter the starting country: "; 
+            // getline(cin, dummy);
+            // getline(cin, startCountry);
+            // cout <<"Enter the starting city: "; 
+            // getline(cin, startCity);
+            // cout <<"Enter the final destination country: "; 
+            // getline(cin, endCountry);
+            // cout <<"Enter the final destination city: "; 
+            // getline(cin, endCity);
 
-            cout <<"Enter a country to fly through on the way to " +  endCity + ", " + endCountry + ": ";
-            getline(cin, intermediateCountry_A);
-            cout <<"Enter the city in " + intermediateCountry_A + " you will be traveling to on your way to " +  endCity + ", " + endCountry + ": ";
-            getline(cin, intermediateCity_A);
+            // cout <<"Enter a country to fly through on the way to " +  endCity + ", " + endCountry + ": ";
+            // getline(cin, intermediateCountry_A);
+            // cout <<"Enter the city in " + intermediateCountry_A + " you will be traveling to on your way to " +  endCity + ", " + endCountry + ": ";
+            // getline(cin, intermediateCity_A);
 
-            cout <<"Enter another country to fly through on the way to " +  endCity + ", " + endCountry + ": ";
-            getline(cin, intermediateCountry_B);
-            cout <<"Enter the city in " + intermediateCountry_B + " you will be traveling to on your way to " +  endCity + ", " + endCountry + ": ";
-            getline(cin, intermediateCity_B);    
+            // cout <<"Enter another country to fly through on the way to " +  endCity + ", " + endCountry + ": ";
+            // getline(cin, intermediateCountry_B);
+            // cout <<"Enter the city in " + intermediateCountry_B + " you will be traveling to on your way to " +  endCity + ", " + endCountry + ": ";
+            // getline(cin, intermediateCity_B);    
+
+            startCountry = "South Korea";
+            startCity = "Seoul";
+            intermediateCountry_A = "Poland";
+            intermediateCity_A = "Warsaw";
+            intermediateCountry_B = "Ghana";
+            intermediateCity_B = "Accra";
+            endCountry = "Croatia";
+            endCity = "Zagreb";
 
             start = startCity + ", " + startCountry;
             end = endCity + ", " + endCountry;
             interm_A = intermediateCity_A + ", " + intermediateCountry_A;
             interm_B = intermediateCity_B + ", " + intermediateCountry_B;
-
-            int convertedToIntStart = city[start];
-            int convertedToIntEnd = city[end];
-            int convertedToInt_IntermA = city[interm_A];
-            int convertedToInt_IntermB = city[interm_B];
+            cout <<interm_A<<endl;
+            cout <<interm_B<<endl;
+            convertedToIntStart = city[start];
+            convertedToIntEnd = city[end];
+            convertedToInt_IntermA = city[interm_A];
+            convertedToInt_IntermB = city[interm_B];
 
             ShortestViaIntermediateCities(adj2, convertedToIntStart, convertedToInt_IntermA, convertedToInt_IntermB, convertedToIntEnd, n); 
         }
