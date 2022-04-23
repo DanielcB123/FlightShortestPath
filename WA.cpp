@@ -665,9 +665,86 @@ void ShortestViaIntermediateCities(vector<int> adj[], int start, int interm_A, i
 
 
 
+    /*
 
 
+        CASE 3 <----------------------------------------------------------------------------
 
+
+    */
+// bool isCyclicUtil(int v, bool visited[], bool *recStack,vector<int> adj[])
+// {
+//     if(visited[v] == false)
+//     {
+//         // Mark the current node as visited and part of recursion stack
+//         visited[v] = true;
+//         recStack[v] = true;
+ 
+//         // Recur for all the vertices adjacent to this vertex
+//         // list<int>::iterator i;
+//         // for(i = adj[v].begin(); i != adj[v].end(); ++i)
+//         for(const auto i : adj[v])
+//         {
+//             if ( !visited[i] && isCyclicUtil(i, visited, recStack, adj) ){
+                
+//                 return true;
+//             }
+//             else if (recStack[i]){
+//                 // for(int i=0; i<v; i++){
+//                 //     if(recStack[i]){
+//                 //         cout << i <<" ";
+//                 //     }
+//                 // }
+//                 return true;
+//             }
+//         }
+ 
+//     }
+//     recStack[v] = false;  // remove the vertex from recursion stack
+//     return false;
+// }
+// bool isCyclic(vector<int> adj[], int v)
+// {
+//     // Mark all the vertices as not visited and not part of recursion
+//     // stack
+//     bool *visited = new bool[v];
+//     bool *recStack = new bool[v];
+//     for(int i = 0; i < v; i++)
+//     {
+//         visited[i] = false;
+//         recStack[i] = false;
+//     }
+ 
+//     // Call the recursive helper function to detect cycle in different
+//     // DFS trees
+//     for(int i = 0; i < v; i++)
+//         if ( !visited[i] && isCyclicUtil(i, visited, recStack, adj)){
+//             for(int i=0; i<v; i++){
+//                 if(recStack[i]){
+//                     cout << i <<" ";
+//                 }
+//             }
+//             return true;
+//         } 
+//     return false;
+// }
+const int maxN = 1e5 + 7;
+int n, m;
+vector<int> vis(maxN, false);
+// vector<int> adj[maxN];
+void dfs(int v, int src, vector<int> adj[]) {
+
+if(vis[v])
+    return;
+    vis[v] = true;
+    cout << v + 1 << " ";
+for(int u: adj[v]) {
+    if(!vis[u])
+        dfs(u, src, adj);
+    }   
+    if(v == src)
+        cout << src + 1<< "\n";
+}
 
 
 
@@ -764,11 +841,12 @@ cout <<"================================================="<<endl;
         cout <<"+                                                                   +\n"; 
         cout <<"+  1. Find Flight with x connections                                +\n"; 
         cout <<"+  2. Find Flight from city_A to city_D via city_B and city_C       +\n"; 
-        cout <<"+  3. Quit                                                          +\n";     
+        cout <<"+  3. Longest Route                                                 +\n";   
+        cout <<"+  4. Exit                                                          +\n";      
         cout <<"+                                                                   +\n";             
         cout <<"+-------------------------------------------------------------------+\n";
         cin >> choice1;
-        if(choice1 == 3){break;}
+        if(choice1 == 4){break;}
         if(choice1 == 1){
             cout <<"+-------------------------------------------+\n";
             cout <<"+              Shortest Flight              +\n";            
@@ -841,5 +919,59 @@ cout <<"================================================="<<endl;
 
             ShortestViaIntermediateCities(adj2, convertedToIntStart, convertedToInt_IntermA, convertedToInt_IntermB, convertedToIntEnd, n); 
         }
+        if(choice1==3){
+            string startCountry, startCity, start, dummy;
+            cout <<"Enter the starting country: "; 
+            getline(cin, dummy);
+            getline(cin, startCountry);
+            cout <<"Enter the starting city: "; 
+            getline(cin, startCity);
+            // start = startCity + ", " + startCountry;
+            start = "Geneva, Switzerland";
+            int source = city[start];
+            // int src=1;
+            // VisitAllFromNodeAndBack(n, src, adj2);
+            // for(int i = 0;i < n;i++) {
+            //     if(!vis[i]) {
+            //         dfs(i, i);
+            //     }
+            // }
+            // Mark all the vertices as not visited and not part of recursion
+            // stack
+
+
+            // if(isCyclic(adj2, n))
+            //     cout << "Graph contains cycle";
+            // else
+            //     cout << "Graph doesn't contain cycle";
+            // return 0;
+            for(int i = source;i < n;i++) {
+                if(!vis[i]) {
+                    dfs(i, i, adj2);
+                }
+            }
+        }
     }
 } 
+
+
+
+
+
+
+// const int maxN = 1e5 + 7;
+// vector<int> vis(maxN, false);
+
+// // vector<int> adjOption3[maxN];
+// void VisitAllFromNodeAndBack(int v, int src){
+//     if(vis[v])
+//         return;
+//     vis[v] = true;
+//     cout << v + 1 << " ";  
+//     for(int u: adj2[v]) {
+//         if(!vis[u])
+//             VisitAllFromNodeAndBack(u, src);
+//     }  
+//     if(v == src)
+//         cout << src + 1<< "\n";
+// }
