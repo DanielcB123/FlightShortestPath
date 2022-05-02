@@ -686,13 +686,11 @@ int main(int argc, char *argv[]){
    string line;
    
 
-//    cout << "Please enter the number of cities in your graph: " << endl;
-//    cout << "---------------------------------------------------" << endl;
-//    cin >> n; 
-   n = 140;
+   cout << "Please enter the number of cities in your graph: " << endl;
+   cin >> n; 
+
    vector<int> adj2[n];
 
-//    Graph graph(n);
  
    char lineChar[256];
 
@@ -703,8 +701,6 @@ int main(int argc, char *argv[]){
       cityFile.getline(lineChar,256);
       line = lineChar;
       city[line] = i;
-      cout << line << " is numbered as city " << city[line]<< endl;
-
    }
 
 
@@ -712,8 +708,12 @@ int main(int argc, char *argv[]){
 
    ifstream flightFile;
    flightFile.open("flight.txt", ios::in);
-cout <<"================================================="<<endl;
+   /* print the graph */
+   cout << endl << "The graph generated can be represented by the following adjacent list : " << endl;
+   cout << "-----------------------------------------------------------------------------------" << endl;
+
    while (flightFile.getline(lineChar, 256)){
+
       /* if line constains From: */
       line = lineChar;
 
@@ -734,9 +734,6 @@ cout <<"================================================="<<endl;
    cout <<"================================================="<<endl;
    flightFile.close();
 
-   /* print the graph */
-   cout << endl << "The graph generated can be represented by the following adjacent list : " << endl;
-   cout << "-----------------------------------------------------------------------------------" << endl;
 
     int choice1 = 0, choice2 = 0, conn;
 

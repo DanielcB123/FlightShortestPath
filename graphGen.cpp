@@ -54,7 +54,7 @@ int main(int argc, char *argv[]){
    cityFile.close();
 
    num_nodes = atoi(argv[1]);
-   //cout << "There are " << num_nodes << " nodes in the graph." << endl;
+  //  cout << "There are " << num_nodes << " nodes in the graph." << endl;
  
    srand((unsigned) time(0)); 
 
@@ -71,23 +71,26 @@ int main(int argc, char *argv[]){
           if (neighbor == i) {flag =1;}
           else {
               for (int k=0; k < node.neighbors.size(); k++){
-                 if (node.neighbors[k] == neighbor)
+                 if (node.neighbors[k] == neighbor){
                     flag = 1;
+                 }
               }
           }
-          if (!flag)
+          if (!flag){
              node.neighbors.push_back(neighbor);
+          }
       }
       graph.push_back(node); 
    }
-
+   ofstream fout;
+   fout.open("flight.txt");
    for (i=0; i< num_nodes; i++){
-     if (!graph[i].neighbors.empty()) continue;
-     cout << "From:  " << city[graph[i].nodeID] << endl << "To  : ";
+     fout << "From:  " << city[graph[i].nodeID] << endl << "To  : ";
      for (j =0; j < graph[i].neighbors.size(); j++){
-         if (j)
-             cout <<  "       " << city[graph[i].neighbors[j]] << endl; 
-           else cout <<  " " << city[graph[i].neighbors[j]] << endl;
+         if (j){
+             fout <<  "       " << city[graph[i].neighbors[j]] << endl; 
+         }
+           else{ fout <<  " " << city[graph[i].neighbors[j]] << endl;}
      }
    }
 }

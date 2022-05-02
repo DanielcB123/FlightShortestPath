@@ -18,14 +18,15 @@ information.  It associates each city with an integer as
 its ID and prints out the flight information from each city 
 to other cities using the IDs assigned.
 
-To compile and run:
-  download graphGen.cpp, city.name, and makefile
-  type "make"
+Step 1: To compile and run:
+        download graphGen.cpp, city.name, and makefile
+        type "make"
 
-To run graphGen:
-  type "./graphGen <number_cities>"
- 
-Note: number_cities is between 1 - 140
+Step 2: To run graphGen:
+        type "./graphGen <number_cities>"
+        Note: number_cities is between 1 - 140
 
-To run WA:
-  type "./WA"
+Step 3: To run WA:
+        type "./WA"
+        enter the number of nodes in the graph and follow menu
+        Note: remember the number of nodes from Step 2
