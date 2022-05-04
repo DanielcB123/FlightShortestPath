@@ -85,12 +85,19 @@ int main(int argc, char *argv[]){
    ofstream fout;
    fout.open("flight.txt");
    for (i=0; i< num_nodes; i++){
-     fout << "From:  " << city[graph[i].nodeID] << endl << "To  : ";
+     if(graph[i].neighbors.size()>0){
+     fout << "From:  " << city[graph[i].nodeID];
+     fout  << endl << "To  : ";
+    //  if(graph[i].neighbors.size()>0){
+    //  cout  << endl << "To  : ";
+
+
      for (j =0; j < graph[i].neighbors.size(); j++){
          if (j){
              fout <<  "       " << city[graph[i].neighbors[j]] << endl; 
          }
            else{ fout <<  " " << city[graph[i].neighbors[j]] << endl;}
+     }
      }
    }
 }

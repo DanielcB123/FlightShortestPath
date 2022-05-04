@@ -31,65 +31,25 @@ void add_edge(vector<int> adj2[], int src, int dest)
     adj2[src].push_back(dest);
 }
 
-void printElements(vector<int> adj2[], int n)
-{
-  
-    // Traversing of vectors v to print
-    // elements stored in it
-    for (int i = 0; i < n; i++) {
-  
-        cout << "Elements at index "
-             << i << ": ";
-  
-        // Displaying element at each column,
-
-        for(int j=0;j<adj2[i].size();j++){
-            cout << adj2[i][j]<<' ';
-        }
-        cout << endl;
-    }
-}
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 bool BFS(vector<int> adj[], int src, int dest, int v, int pred[], int dist[])
 {
-    // a queue to maintain queue of vertices whose
-    // adjacency list is to be scanned as per normal
-    // DFS algorithm
+
     list<int> queue;
  
-    // boolean array visited[] which stores the
-    // information whether ith vertex is reached
-    // at least once in the Breadth first search
+
     bool visited[v];
  
-    // initially all vertices are unvisited
-    // so v[i] for all i is false
-    // and as no path is yet constructed
-    // dist[i] for all i set to infinity
+
     for (int i = 0; i < v; i++) {
         visited[i] = false;
         dist[i] = INT_MAX;
         pred[i] = -1;
     }
  
-    // now source is first to be visited and
-    // distance from source to itself should be 0
+
     visited[src] = true;
     dist[src] = 0;
     queue.push_back(src);
@@ -105,8 +65,7 @@ bool BFS(vector<int> adj[], int src, int dest, int v, int pred[], int dist[])
                 pred[adj[u][i]] = u;
                 queue.push_back(adj[u][i]);
  
-                // We stop BFS when we find
-                // destination.
+
                 if (adj[u][i] == dest)
                     return true;
             }
@@ -126,15 +85,12 @@ bool BFS(vector<int> adj[], int src, int dest, int v, int pred[], int dist[])
     */ 
 
 
-// utility function to print the shortest distance
-// between source vertex and destination vertex
+
 void printShortestDistanceInRange(vector<int> adj[], int s,
                            int dest, int v, int conn)
 {
     std::map<string,int,strCmp>::iterator it;
-    // predecessor[i] array stores predecessor of
-    // i and distance array stores distance of i
-    // from s
+
     int pred[v], dist[v];
  
     if (BFS(adj, s, dest, v, pred, dist) == false) {
@@ -143,7 +99,6 @@ void printShortestDistanceInRange(vector<int> adj[], int s,
         return;
     }
  
-    // vector path stores the shortest path
     vector<int> path;
     int crawl = dest;
     path.push_back(crawl);
@@ -152,7 +107,6 @@ void printShortestDistanceInRange(vector<int> adj[], int s,
         crawl = pred[crawl];
     }
  
-    // distance from source is in distance array
     cout << "Shortest trip has "
          << dist[dest] << " flights";
 
@@ -162,7 +116,6 @@ void printShortestDistanceInRange(vector<int> adj[], int s,
         cout <<"\nThis is more flights the amount requested\n";
     }
  
-    // printing path from source to destination
     cout << "\nPath is::\n";
     for (int i = path.size() - 1; i >= 0; i--){
         
@@ -178,9 +131,6 @@ void printShortestDistance(vector<int> adj[], int s,
                            int dest, int v)
 {
     std::map<string,int,strCmp>::iterator it;
-    // predecessor[i] array stores predecessor of
-    // i and distance array stores distance of i
-    // from s
     int pred[v], dist[v];
  
     if (BFS(adj, s, dest, v, pred, dist) == false) {
@@ -189,7 +139,6 @@ void printShortestDistance(vector<int> adj[], int s,
         return;
     }
  
-    // vector path stores the shortest path
     vector<int> path;
     int crawl = dest;
     path.push_back(crawl);
@@ -198,11 +147,9 @@ void printShortestDistance(vector<int> adj[], int s,
         crawl = pred[crawl];
     }
  
-    // distance from source is in distance array
     cout << "Shortest trip has "
          << dist[dest] << " flights";
  
-    // printing path from source to destination
     cout << "\nPath is::\n";
     for (int i = path.size() - 1; i >= 0; i--){
         
@@ -604,9 +551,6 @@ int printShortestDistanceRoundTrip(vector<int> adj[], int s,
                            int dest, int v)
 {
     std::map<string,int,strCmp>::iterator it;
-    // predecessor[i] array stores predecessor of
-    // i and distance array stores distance of i
-    // from s
     int pred[v], dist[v];
     int connection = 0;
  
@@ -716,18 +660,15 @@ int main(int argc, char *argv[]){
 
       /* if line constains From: */
       line = lineChar;
-
+        cout << line << endl;
       if (line.find("From:", 0) == 0 ){
           line.erase(0,7);
           node1 = city[line];
           //TESTING TO MAKE SURE THE ADJ2 had correct values
-          cout << node1 << "--->" << line<< endl;
         
       } else {
           line.erase(0,7);
           node2 = city[line];
-        //   graph.addEdge(node1,node2);
-        cout <<"\t"<< node2<< "----->"<<line<<endl;
         add_edge(adj2,node1,node2);
       }
    }
@@ -801,10 +742,11 @@ int main(int argc, char *argv[]){
 
             start = startCity + ", " + startCountry;
             end = endCity + ", " + endCountry;
+
+
             interm_A = intermediateCity_A + ", " + intermediateCountry_A;
             interm_B = intermediateCity_B + ", " + intermediateCountry_B;
-            cout <<interm_A<<endl;
-            cout <<interm_B<<endl;
+
             convertedToIntStart = city[start];
             convertedToIntEnd = city[end];
             convertedToInt_IntermA = city[interm_A];
@@ -821,6 +763,7 @@ int main(int argc, char *argv[]){
             cout <<"Enter the starting city: "; 
             getline(cin, startCity);
             start = startCity + ", " + startCountry;
+            // start = "Seoul, South Korea";
             source = city[start];
             getAdjacent(source,adj2,n);
         }
